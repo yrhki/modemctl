@@ -49,7 +49,7 @@ func (c *Client) DownloadConfigFile() (*bytes.Buffer, error) {
 	resp, err := c.httpPostForm("/html/management/downloadconfigfile.conf?RequestFile=success", token.form())
 	if err != nil { return nil, err }
 
-	return decrypt(resp, confDecrypter), nil
+	return decrypt(resp, cipherConf), nil
 }
 
 func (c *Client) Reboot() error {

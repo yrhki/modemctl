@@ -36,6 +36,13 @@ func NewClient(modemURL string) (*Client, error) {
 
 	jar, err := cookiejar.New(nil)
 	if err != nil { return nil, err }
+	jar.SetCookies(c.url, []*http.Cookie{
+			{
+				Name: "Language",
+				Value: "en_us",
+			},
+		},
+	)
 
 	c.c = http.Client{
 		Jar:jar,
