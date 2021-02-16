@@ -84,7 +84,7 @@ func (c *Client) GetIPFilters() (black, white []*IPFilter, err error) {
 func (c *Client) DeleteIPFilter(filters []*IPFilter) error {
 	if len(filters) == 0 { return nil }
 
-	token, err := c.getToken("/html/security/ipfilter.asp")
+	token, err := c.getToken()
 	if err != nil { return err }
 
 	v := token.form()
@@ -121,7 +121,7 @@ func (c *Client) DeleteAllIPFilter() error {
 func (c *Client) AddIPFilter(block bool, filter *IPFilter) error {
 	// TODO: Rename function to make more sense
 
-	token, err := c.getToken("/html/security/ipfilter.asp")
+	token, err := c.getToken()
 	if err != nil { return err }
 
 	v := url.Values{

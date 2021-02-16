@@ -52,7 +52,7 @@ func (c *Client) DiagnosisPing(target string, packetSize, timeout int, fragment 
 	} else { q.Set("fragment", "0") }
 	u.RawQuery = q.Encode()
 
-	token, err := c.getToken("/html/management/diagnose.asp")
+	token, err := c.getToken()
 	if err != nil { return err }
 
 
@@ -74,7 +74,7 @@ func (c *Client) DiagnosisTraceroute(target string, maxHops, timeout int) error 
 	q.Set("RequestFile", "success")
 	u.RawQuery = q.Encode()
 
-	token, err := c.getToken("/html/management/diagnose.asp")
+	token, err := c.getToken()
 	if err != nil { return err }
 
 

@@ -58,8 +58,8 @@ func (c *Client) formatURL(path string) string {
 	return fmt.Sprintf("%s://%s%s", c.url.Scheme, c.url.Host, path)
 }
 
-func (c *Client) getToken(prefix string) (*token, error) {
-	resp, err := c.httpGet(prefix)
+func (c *Client) getToken() (*token, error) {
+	resp, err := c.httpGet("")
 	if err != nil { return nil, err }
 
 	t := new(token)

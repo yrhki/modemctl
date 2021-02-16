@@ -15,7 +15,7 @@ type Logs struct {
 }
 
 func (c *Client) GetLogs() (*Logs, error) {
-	token, err := c.getToken("/html/management/logcfg.asp")
+	token, err := c.getToken()
 	if err != nil { return nil, err }
 
 	resp, err := c.httpPostForm("/html/management/logexport.log?RequestFile=success", token.form())
@@ -42,7 +42,7 @@ func (c *Client) GetLogs() (*Logs, error) {
 }
 
 func (c *Client) DownloadConfigFile() (*bytes.Buffer, error) {
-	token, err := c.getToken("/html/management/maintenance.asp")
+	token, err := c.getToken()
 	if err != nil { return nil, err }
 
 	resp, err := c.httpPostForm("/html/management/downloadconfigfile.conf?RequestFile=success", token.form())
@@ -52,7 +52,7 @@ func (c *Client) DownloadConfigFile() (*bytes.Buffer, error) {
 }
 
 func (c *Client) Reboot() error {
-	token, err := c.getToken("/html/management/maintenance.asp")
+	token, err := c.getToken()
 	if err != nil { return err }
 
 	_, err = c.httpPostForm("/html/management/reboot.cgi", token.form())

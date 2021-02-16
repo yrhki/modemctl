@@ -5,7 +5,7 @@ import (
 )
 
 func (c *Client) Login(username, password string) error {
-	t, err := c.getToken("")
+	t, err := c.getToken()
 	if err != nil { return err }
 
 	pass, err := encryptPassword(username, password, t)
@@ -24,7 +24,7 @@ func (c *Client) Login(username, password string) error {
 }
 
 func (c *Client) Logout() error {
-	t, err := c.getToken("")
+	t, err := c.getToken()
 	if err != nil { return err }
 
 	_, err = c.httpPostForm("/index/logout.cgi", t.form())
