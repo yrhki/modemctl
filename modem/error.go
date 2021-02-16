@@ -1,14 +1,15 @@
 package modem
 
 import (
+	"bytes"
 	"errors"
 	"regexp"
 )
 
 
-func (c *Client) checkError(text string) error {
+func (c *Client) checkError(body *bytes.Buffer) error {
 	pageNameReg := regexp.MustCompile(`var pageName = '(.*)';`)
-	matches := pageNameReg.FindStringSubmatch(text)
+	matches := pageNameReg.FindStringSubmatch(body.String())
 	if len(matches) > 0 {
 		switch matches[1] {
 		case "/html/msgerrcode.asp":

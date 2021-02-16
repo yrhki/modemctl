@@ -27,7 +27,7 @@ func (c *Client) DiagnosisWirelessStatus() (*WirelessStatus, error) {
 	resp, err := c.httpPost(fmt.Sprintf("/index/getmodemsts.cgi?rid=%v", rand.Float64()), nil, nil)
 	if err != nil { return nil, err }
 
-	values := strings.Split(resp.String(), ",")
+	values := strings.Split(resp.Body.String(), ",")
 	fmt.Printf("%#+v\n", values)
 
 	plmn, err := strconv.Atoi(values[1])
@@ -90,7 +90,7 @@ func (c *Client) DiagnosisPingResult(output io.Writer) (bool, error) {
 	resp, err := c.httpGet("/html/management/pingresult.asp")
 	if err != nil { return false, err }
 
-	lines := strings.Split(resp.String(), " + ")
+	lines := strings.Split(resp.Body.String(), " + ")
 	lines = lines[:len(lines)-1]
 
 	if !strings.HasPrefix(lines[len(lines)-1], "\"__") {

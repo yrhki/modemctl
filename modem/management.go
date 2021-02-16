@@ -4,7 +4,6 @@ import (
 	"archive/tar"
 	"bytes"
 	"compress/bzip2"
-	"encoding/xml"
 	"fmt"
 	"io"
 	"time"
@@ -21,7 +20,7 @@ func (c *Client) GetLogs() (*Logs, error) {
 
 	resp, err := c.httpPostForm("/html/management/logexport.log?RequestFile=success", token.form())
 	if err != nil { return nil, err }
-	files := tar.NewReader(bzip2.NewReader(resp))
+	files := tar.NewReader(bzip2.NewReader(resp.Body))
 
 	logs := new(Logs)
 
@@ -49,7 +48,7 @@ func (c *Client) DownloadConfigFile() (*bytes.Buffer, error) {
 	resp, err := c.httpPostForm("/html/management/downloadconfigfile.conf?RequestFile=success", token.form())
 	if err != nil { return nil, err }
 
-	return decrypt(resp, cipherConf), nil
+	return decrypt(resp.Body, cipherConf), nil
 }
 
 func (c *Client) Reboot() error {
@@ -64,7 +63,7 @@ func (c *Client) Reboot() error {
 	for {
 		resp, _ := c.httpPost("/index/getRebootRes.cgi", nil, nil)
 		// there should not be any errors here
-		if resp.String() == "0" { break }
+		if resp.Body.String() == "0" { break }
 		fmt.Println("hello")
 		time.Sleep(time.Second * 1)
 	}

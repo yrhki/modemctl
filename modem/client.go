@@ -65,9 +65,9 @@ func (c *Client) getToken(prefix string) (*token, error) {
 
 	csrfParamReg := regexp.MustCompile(`var csrf_param = "(.*)"`)
 	csrfTokenReg := regexp.MustCompile(`var csrf_token = "(.*)"`)
-	matches := csrfParamReg.FindStringSubmatch(resp.String())
+	matches := csrfParamReg.FindStringSubmatch(resp.Body.String())
 	t.csrfParam = matches[1]
-	matches = csrfTokenReg.FindStringSubmatch(resp.String())
+	matches = csrfTokenReg.FindStringSubmatch(resp.Body.String())
 	t.csrfToken = matches[1]
 
 	return t, nil
@@ -85,7 +85,7 @@ func (c *Client) getRedirect(page string) (string, error) {
 func (c *Client) GetEventStatus() error {
 	resp, err := c.httpGet("/html/ajaxref/getEventStatus.cgi")
 	if err != nil { return err }
-	fmt.Println(resp.String())
+	fmt.Println(resp.Body.String())
 	return nil
 }
 
