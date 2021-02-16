@@ -21,6 +21,8 @@ var (
 		"Login failed. You can try one more times.",
 		"You have attempted to log in three consecutive times unsuccessfully. Please wait one minute before retrying.",
 	}
+
+	ErrNoLogin = errors.New("Not logged in")
 )
 
 func (c *Client) checkError(body *bytes.Buffer) error {
@@ -49,6 +51,8 @@ func (c *Client) checkError(body *bytes.Buffer) error {
 			cookieFlag, err := strconv.Atoi(matches[1])
 			if err != nil { return err }
 
+			c.loggedIn = false
+
 			switch cookieFlag {
 			case 1:
 				return errors.New(loginErrorMessages[0])
@@ -57,12 +61,14 @@ func (c *Client) checkError(body *bytes.Buffer) error {
 			}
 
 			switch loginTimes {
+			case 0:
+				return ErrNoLogin
 			case 1:
-				return errors.New(loginErrorMessages[2])
-			case 2:
 				return errors.New(loginErrorMessages[3])
-			case 3:
+			case 2:
 				return errors.New(loginErrorMessages[4])
+			case 3:
+				return errors.New(loginErrorMessages[5])
 			default:
 				return errors.New(loginErrorMessages[5])
 			}

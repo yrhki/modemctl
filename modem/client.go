@@ -26,6 +26,7 @@ type Client struct {
 	url *url.URL
 	username, password string
 	sessionID string
+	loggedIn bool
 }
 
 func NewClient(modemURL string) (*Client, error) {
