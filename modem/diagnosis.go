@@ -93,15 +93,17 @@ func (c *Client) DiagnosisPingResult(output io.Writer) (bool, error) {
 	lines := strings.Split(resp.Body.String(), " + ")
 	lines = lines[:len(lines)-1]
 
-	if !strings.HasPrefix(lines[len(lines)-1], "\"__") {
-		time.Sleep(time.Second * 1)
+	if len(lines) == 0 || !strings.HasPrefix(lines[len(lines)-1], "\"__") {
+		time.Sleep(time.Second * 3)
 		return c.DiagnosisPingResult(output)
 	}
 
-	for _, line := range lines[:len(lines)-1] {
-		line = line[1:len(line)-1]
-		line = strings.Replace(line, "\\n", "\n", 1)
-		fmt.Fprint(output, line)
+	if output != nil {
+		for _, line := range lines[:len(lines)-1] {
+			line = line[1:len(line)-1]
+			line = strings.Replace(line, "\\n", "\n", 1)
+			fmt.Fprint(output, line)
+		}
 	}
 
 	return lines[len(lines)-1] == `"__finshed__\n"`, nil
