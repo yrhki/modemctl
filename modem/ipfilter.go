@@ -36,10 +36,9 @@ type IPFilter struct {
 	block bool
 	id int
 	Protocol IPFilterProtocol
-	DestIPRange, SourceIPRange [2]net.IP
-	DestPortRange, SourcePortRange [2]int
+	DestIPRange, SourceIPRange IPRange
+	DestPortRange, SourcePortRange PortRange
 }
-
 
 func (ipf *IPFilter) ID() string {
 	if ipf.id != 0 {
