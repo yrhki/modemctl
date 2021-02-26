@@ -51,20 +51,6 @@ func (ipf *IPFilter) ID() string {
 	return ""
 }
 
-func (ipf *IPFilter) sourceIP(pos int) string {
-	if ipf.SourceIPRange[pos] != nil {
-		return ipf.SourceIPRange[pos].String()
-	}
-	return "0"
-}
-
-func (ipf *IPFilter) destIP(pos int) string {
-	if ipf.DestIPRange[pos] != nil {
-		return ipf.DestIPRange[pos].String()
-	}
-	return "0"
-}
-
 func parseCIRD(cidr string) (net.IP, net.IP, error) {
 	_, ipNet, err := net.ParseCIDR(cidr)
 	if err != nil { return nil, nil, err }

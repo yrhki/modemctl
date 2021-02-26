@@ -19,6 +19,14 @@ func (r PortRange) End() int { return r[1] }
 type IPRange [2]net.IP
 func (r IPRange) Start() net.IP { return r[0] }
 func (r IPRange) End() net.IP { return r[1] }
+func (r IPRange) StartString() string {
+	if r.Start() == nil { return "" }
+	return r.Start().String()
+}
+func (r IPRange) EndString() string {
+	if r.End() == nil { return "" }
+	return r.End().String()
+}
 
 type Config struct {
 	Firewall ConfigFirewall `xml:"InternetGatewayDevice>X_FireWall"`

@@ -125,15 +125,15 @@ func (c *Client) AddIPFilter(block bool, filter *IPFilter) error {
 	if err != nil { return err }
 
 	v := url.Values{
-		"x.SourceIPStart":   {filter.sourceIP(0)},
-		"x.SourceIPEnd":     {filter.sourceIP(1)},
-		"x.DestIPStart":     {filter.destIP(0)},
-		"x.DestIPEnd":       {filter.destIP(1)},
+		"x.SourceIPStart":   {filter.SourceIPRange.StartString()},
+		"x.SourceIPEnd":     {filter.SourceIPRange.EndString()},
+		"x.DestIPStart":     {filter.DestIPRange.StartString()},
+		"x.DestIPEnd":       {filter.DestIPRange.EndString()},
 		"x.Protocol":        {filter.Protocol.string()},
-		"x.SourcePortStart": {fmt.Sprint(filter.SourcePortRange[0])},
-		"x.SourcePortEnd":   {fmt.Sprint(filter.SourcePortRange[1])},
-		"x.DestPortStart":   {fmt.Sprint(filter.DestPortRange[0])},
-		"x.DestPortEnd":     {fmt.Sprint(filter.DestPortRange[0])},
+		"x.SourcePortStart": {fmt.Sprint(filter.SourcePortRange.Start())},
+		"x.SourcePortEnd":   {fmt.Sprint(filter.SourcePortRange.End())},
+		"x.DestPortStart":   {fmt.Sprint(filter.DestPortRange.Start())},
+		"x.DestPortEnd":     {fmt.Sprint(filter.DestPortRange.End())},
 		"csrf_param":        {token.csrfParam},
 		"csrf_token":        {token.csrfToken},
 	}
