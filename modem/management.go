@@ -4,6 +4,7 @@ import (
 	"archive/tar"
 	"bytes"
 	"compress/bzip2"
+	"encoding/xml"
 	"fmt"
 	"io"
 	"time"
@@ -49,6 +50,21 @@ func (c *Client) DownloadConfigFile() (*bytes.Buffer, error) {
 	if err != nil { return nil, err }
 
 	return decrypt(resp.Body, cipherConf), nil
+}
+
+func (c *Client) GetConfig() (*Config, error) {
+	token, err := c.getToken()
+	if err != nil { return nil, err }
+
+	resp, err := c.httpPostForm("/html/management/downloadconfigfile.conf?RequestFile=success", token.form())
+	if err != nil { return nil, err }
+
+	data := decrypt(resp.Body, cipherConf)
+	config := new(Config)
+
+	err = xml.Unmarshal(data.Bytes(), config)
+	if err != nil { return nil, err }
+	return config, nil
 }
 
 func (c *Client) Reboot() error {

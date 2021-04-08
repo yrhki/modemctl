@@ -36,10 +36,9 @@ type IPFilter struct {
 	block bool
 	id int
 	Protocol IPFilterProtocol
-	DestIPRange, SourceIPRange [2]net.IP
-	DestPortRange, SourcePortRange [2]int
+	DestIPRange, SourceIPRange IPRange
+	DestPortRange, SourcePortRange PortRange
 }
-
 
 func (ipf *IPFilter) ID() string {
 	if ipf.id != 0 {
@@ -52,23 +51,9 @@ func (ipf *IPFilter) ID() string {
 	return ""
 }
 
-func (ipf *IPFilter) sourceIP(pos int) string {
-	if ipf.SourceIPRange[pos] != nil {
-		return ipf.SourceIPRange[pos].String()
-	}
-	return "0"
-}
-
-func (ipf *IPFilter) destIP(pos int) string {
-	if ipf.DestIPRange[pos] != nil {
-		return ipf.DestIPRange[pos].String()
-	}
-	return "0"
-}
-
-func parseCIRD(cidr string) (net.IP, net.IP, error) {
+func parseCIRD(cidr string) (IPRange, error) {
 	_, ipNet, err := net.ParseCIDR(cidr)
-	if err != nil { return nil, nil, err }
+	if err != nil { return IPRange{}, err }
 
 	// https://stackoverflow.com/questions/60540465/go-how-to-list-all-ips-in-a-network/60542265#60542265
 	mask := binary.BigEndian.Uint32(ipNet.Mask)
@@ -81,26 +66,25 @@ func parseCIRD(cidr string) (net.IP, net.IP, error) {
 
 	// make starting address end in 1
 	ipFirst := make(net.IP, 4)
-	if start % 8 == 0 { start++
-	}
+	if start % 8 == 0 { start++ }
 	binary.BigEndian.PutUint32(ipFirst, start)
 
-	return ipFirst, ipLast, nil
+	return IPRange{ipFirst, ipLast}, nil
 }
 
 func IPFilterCIDR(sourceCIDR, destCIDR string) (*IPFilter, error) {
 	filter := new(IPFilter)
 
 	if sourceCIDR != "" {
-		first, last, err := parseCIRD(sourceCIDR)
+		ipRange, err := parseCIRD(sourceCIDR)
 		if err != nil { return nil, err }
-		filter.SourceIPRange = [2]net.IP{first, last}
+		filter.SourceIPRange = ipRange
 	}
 
 	if destCIDR != "" {
-		first, last, err := parseCIRD(destCIDR)
+		ipRange, err := parseCIRD(destCIDR)
 		if err != nil { return nil, err }
-		filter.DestIPRange = [2]net.IP{first, last}
+		filter.DestIPRange = ipRange
 	}
 
 	return filter, nil
